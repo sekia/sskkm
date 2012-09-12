@@ -1,6 +1,8 @@
 #ifndef SSKKM_CONVERGENCE_PREDICATOR_H_
 #define SSKKM_CONVERGENCE_PREDICATOR_H_
 
+#include <cstdlib>
+
 namespace sskkm {
 
 class ConvergencePredicator {
@@ -20,7 +22,9 @@ class ConvergencePredicator {
     ++iteration_count_;
     if (iteration_count_ <= num_least_iterations_) { return false; }
     if (iteration_count_ >= num_max_iterations_) { return true; }
-    if (abs(prev_score - curr_score) / curr_score < epsilon_) { return true; }
+    if (std::fabs(prev_score - curr_score) / curr_score < epsilon_) {
+      return true;
+    }
     return false;
   }
 
