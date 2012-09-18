@@ -17,20 +17,19 @@ inline KernelMatrix ComputePolynomialKernelMatrix(
 
 inline KernelMatrix ComputePolynomialKernelMatrix(
     const SparseMatrix &vectors, double linear_shift, double exponent) {
-  DenseMatrix products((vectors.transpose() * vectors).eval());
+  DenseMatrix products = (vectors.transpose() * vectors).eval();
   return KernelMatrix((products.array() + linear_shift).pow(exponent));
 }
 
 template <typename Matrix>
 inline KernelMatrix ComputeGaussianKernelMatrix(
     const Matrix &vectors, double deviation) {
-  KernelMatrix exponents(vectors.cols(), vectors.cols());
-  for (typename Matrix::Index i = 0; i < vectors.cols(); ++i) {
-    for (typename Matrix::Index j = 0; j < vectors.cols(); ++j) {
-      exponents(i, j) =
-          -((vectors.col(i) - vectors.col(j)).norm() / (deviation * deviation));
-    }
-  }
+  DenseMatrix products = (vectors.transpose() * vectors).eval();
+  KernelMatrix exponents =
+      (products.diagonal().replicate(1, vectors.cols()) +
+        (-2 * products) +
+        products.diagonal().transpose().replicate(vectors.cols(), 1)) /
+      -(deviation * deviation);
   return exponents.unaryExpr(std::ptr_fun<double, double>(std::exp));
 }
 
