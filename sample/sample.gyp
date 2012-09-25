@@ -5,6 +5,9 @@
       'target_name': 'kernel_k_means',
       'type': 'executable',
       'sources': ['kernel_k_means.cc',],
+      'link_settings': {
+        'libraries': ['-lboost_program_options',],
+      },
     },
     {
       'target_name': 'graph_clustering',
