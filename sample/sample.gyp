@@ -14,7 +14,7 @@
       'type': 'executable',
       'sources': ['graph_clustering.cc',],
       'link_settings': {
-        'libraries': ['-lboost_graph',],
+        'libraries': ['-lboost_graph', '-lboost_program_options',],
       },
     },
   ],
