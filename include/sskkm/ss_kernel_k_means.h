@@ -191,7 +191,7 @@ inline AdjacencyMatrix ComputeAdjacencyMatrix(const UndirectedGraph &graph) {
 
 inline ConstraintPenaltyMatrix ComputeConstraintPenaltyMatrix(
     const MustLinks &must_links,
-    const CannotLinks &cannot_links) throw (InvalidArgument) {
+    const CannotLinks &cannot_links) {
   if (boost::num_vertices(must_links) != boost::num_vertices(cannot_links)) {
     throw InvalidArgument(
         "The numbers of vertices in must-links and cannot-links must be"
@@ -328,8 +328,7 @@ inline ClusterIndicatorMatrix InitializeFarthestFirst(
     std::size_t k,
     const KernelMatrix &kernels,
     const MustLinks &must_links,
-    const CannotLinks &cannot_links)
-    throw (RuntimeError) {
+    const CannotLinks &cannot_links) {
   MustLinks inferred_must_links = ComputeTransitiveMustLinks(must_links);
   ComponentIndices component_indices;
   boost::connected_components(
@@ -421,8 +420,7 @@ inline ClusterIndicatorMatrix ExecuteSSKernelKMeans(
     const CannotLinks &cannot_links,
     ConvergencePredicator &converged,
     double diagonal_shift = 0.0,
-    bool less_memory = false)
-    throw (InvalidArgument, RuntimeError, TooFewClustersLeft) {
+    bool less_memory = false) {
   switch (objective) {
     case kNormalizedCut: {
       WeightVector degrees = internal::ComputeVertexDegreeVector(graph);

@@ -49,7 +49,7 @@ public:
 /**
    Reads entire bytes of a stream.
  */
-inline std::string SlurpStream(std::istream &in) throw (InvalidArgument) {
+inline std::string SlurpStream(std::istream &in) {
   if (!in.good()) { throw InvalidArgument("The stream is not readable"); }
   std::ostringstream buf;
   buf << in.rdbuf();
@@ -59,7 +59,7 @@ inline std::string SlurpStream(std::istream &in) throw (InvalidArgument) {
 /**
    Reads whole content in a file.
  */
-inline std::string SlurpFile(const char *filename) throw (InvalidArgument) {
+inline std::string SlurpFile(const char *filename) {
   std::ifstream file(filename);
   return SlurpStream(file);
 }

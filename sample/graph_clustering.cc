@@ -36,7 +36,7 @@ void ExitWithHelpMessage(
 }
 
 ClusteringObjective DetermineObjectiveFunction(
-    const std::string &objective_name) throw (std::invalid_argument) {
+    const std::string &objective_name) {
   if (objective_name == "ratio_cut") {
     return kRatioCut;
   } else if (objective_name == "ratio_association") {

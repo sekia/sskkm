@@ -187,8 +187,7 @@ inline ClusterIndicatorMatrix ExecuteKernelKMeans(
     const ClusterIndicatorMatrix &initial_clusters,
     int k_min,
     const KernelMatrix &kernels,
-    ConvergencePredicator &converged)
-    throw (InvalidArgument, TooFewClustersLeft) {
+    ConvergencePredicator &converged) {
   if (kernels.rows() != kernels.cols()) {
     throw InvalidArgument("Kernel matrix must be a square matrix");
   }
@@ -220,8 +219,7 @@ inline ClusterIndicatorMatrix ExecuteWeightedKernelKMeans(
     const KernelMatrix &kernels,
     const WeightVector &weights,
     ConvergencePredicator &converged,
-    bool less_memory = false)
-    throw (InvalidArgument, TooFewClustersLeft) {
+    bool less_memory = false) {
   if (kernels.rows() != kernels.cols()) {
     throw InvalidArgument("Kernel matrix must be a square matrix");
   }

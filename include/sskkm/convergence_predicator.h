@@ -10,7 +10,7 @@ class ConvergencePredicator {
   ConvergencePredicator(
       unsigned num_max_iterations,
       unsigned num_least_iterations,
-      double epsilon) throw () :
+      double epsilon) :
       epsilon_(epsilon),
       iteration_count_(0),
       num_least_iterations_(num_least_iterations),
@@ -18,7 +18,7 @@ class ConvergencePredicator {
 
   // Use default copy constructor and assignment operator.
 
-  bool operator()(const double prev_score, const double curr_score) throw () {
+  bool operator()(const double prev_score, const double curr_score) {
     ++iteration_count_;
     if (iteration_count_ <= num_least_iterations_) { return false; }
     if (iteration_count_ >= num_max_iterations_) { return true; }

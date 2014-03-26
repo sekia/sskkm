@@ -26,7 +26,7 @@ inline void ReadMatrixHeader(
     const boost::tokenizer<>::iterator &iter_end,
     unsigned *num_rows,
     unsigned *num_cols,
-    unsigned *num_nonzeros = 0) throw (InvalidFormat) {
+    unsigned *num_nonzeros = 0) {
   if (iter == iter_end) { throw InvalidFormat("No header"); }
   try {
     *num_rows = boost::lexical_cast<unsigned>(*iter);
@@ -56,7 +56,7 @@ inline DenseMatrix ReadDenseMatrix(
     const boost::tokenizer<>::iterator &iter_end,
     unsigned num_rows,
     unsigned num_cols,
-    bool transposed) throw (InvalidFormat) {
+    bool transposed) {
   unsigned p = num_rows, q = num_cols;
   if (transposed) { std::swap(p, q); }
   DenseMatrix matrix(num_rows, num_cols);
@@ -96,7 +96,7 @@ inline SparseMatrix ReadSparseMatrix(
     unsigned num_rows,
     unsigned num_cols,
     unsigned num_nonzeros,
-    bool transposed) throw (InvalidFormat) {
+    bool transposed) {
   unsigned p = num_rows, q = num_cols;
   if (transposed) { std::swap(p, q); }
   std::vector<SparseMatrixCoefficient> matrix_values;
@@ -161,7 +161,7 @@ inline SparseMatrix ReadSparseMatrix(
 
 }  // namespace internal
 
-inline MatrixType DetermineMatrixType(const std::string &src) throw () {
+inline MatrixType DetermineMatrixType(const std::string &src) {
   boost::tokenizer<> tokenizer(src, ::sskkm::internal::separator_);
   unsigned num_header_elements = 0;
   for (boost::tokenizer<>::iterator iter = tokenizer.begin();
@@ -185,9 +185,7 @@ inline MatrixType DetermineMatrixType(const std::string &src) throw () {
   }
 }
 
-inline DenseMatrix ParseDenseMatrix(
-    const std::string &src,
-    bool transposed = false) throw (InvalidFormat) {
+inline DenseMatrix ParseDenseMatrix(const std::string &src, bool transposed = false) {
   if (DetermineMatrixType(src) != kDenseMatrix) {
     throw InvalidFormat("Invalid dense matrix foramt");
   }
@@ -202,9 +200,7 @@ inline DenseMatrix ParseDenseMatrix(
       iter, iter_end, num_rows, num_cols, transposed);
 }
 
-inline SparseMatrix ParseSparseMatrix(
-    const std::string &src,
-    bool transposed = false) throw (InvalidFormat) {
+inline SparseMatrix ParseSparseMatrix(const std::string &src, bool transposed = false) {
   if (DetermineMatrixType(src) != kSparseMatrix) {
     throw InvalidFormat("Invalid sparse matrix foramt");
   }
