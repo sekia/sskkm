@@ -205,9 +205,9 @@ int main(int argc, const char **argv) {
   }
 
   /*
-    Execute clustering the vectors into 6 clusters. The clustering repeats at
-    lest 20 times, and terminates when it exceeds 500 times or eps converged
-    within 0.1 %.
+    Execute clustering the vectors into at least k_min clusters. The clustering
+    repeats at lest 20 times, and terminates when it exceeds 500 times or eps
+    converged within 0.1 %.
   */
   ConvergencePredicator converged(500, 20, 0.001);
   try {
