@@ -1,4 +1,3 @@
-#include <boost/foreach.hpp>
 /*
   This header is not used directly in this source file but
   |sskkm/ss_kernel_k_means.h|, a header included below, does. And it seems that
@@ -159,8 +158,7 @@ int main(int argc, const char **argv) {
         cluster_numbers[iter.row()] = iter.col();
       }
     }
-    BOOST_FOREACH (
-        const ClusterIndicatorMatrix::Index cluster_id, cluster_numbers) {
+    for (const auto cluster_id: cluster_numbers) {
       std::cout << cluster_id << std::endl;
     }
   } catch (const std::exception &e) {

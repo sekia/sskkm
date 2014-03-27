@@ -80,9 +80,9 @@ inline ComponentIndicatorMatrix ComputeComponentIndicatorMatrix(
   ComponentIndex max_component_index = 0;
   std::vector<SparseMatrixCoefficient> component_indicator_coeffs;
   component_indicator_coeffs.reserve(components.size());
-  ComponentIndices::key_type vertex;
-  ComponentIndices::mapped_type component;
-  BOOST_FOREACH (boost::tie(vertex, component), components) {
+  for (const auto &vertex_component_pair: components) {
+    const auto vertex = vertex_component_pair.first;
+    const auto component = vertex_component_pair.second;
     if (max_component_index < component) { max_component_index = component; }
     component_indicator_coeffs.push_back(
         SparseMatrixCoefficient(vertex, component, 1.0));
@@ -135,9 +135,9 @@ inline CannotLinks ComputeTransitiveCannotLinks(
       cannot_link_component_pairs.begin(), cannot_link_component_pairs.end());
 
   UndirectedGraph cannot_links(boost::num_vertices(given_cannot_links));
-  ComponentIndex component1, component2;
-  BOOST_FOREACH (
-      boost::tie(component1, component2), cannot_link_component_pairs) {
+  for (const auto &cannot_link_component_pair: cannot_link_component_pairs) {
+    const auto component1 = cannot_link_component_pair.first;
+    const auto component2 = cannot_link_component_pair.second;
     for (ComponentIndicatorMatrix::InnerIterator iter1(components, component1);
          iter1;
          ++iter1) {
@@ -375,8 +375,7 @@ inline ClusterIndicatorMatrix InitializeFarthestFirst(
          ++i) {
       if (is_chosen_component[i]) { continue; }
       double similarity = 0.0;
-      BOOST_FOREACH (
-          const ComponentIndicatorMatrix::Index j, chosen_component_indices) {
+      for (const auto j: chosen_component_indices) {
         similarity += component_component_similarities(i, j);
       }
       if (similarity < worst_similarity) {

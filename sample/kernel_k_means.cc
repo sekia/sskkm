@@ -1,4 +1,3 @@
-#include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/parsers.hpp>
@@ -84,7 +83,7 @@ ClusterIndicatorMatrix InitializeRandomClusters(
       coeffs[i] = SparseMatrixCoefficient(i, cluster_index, 1.0);
       ++cluster_sizes[cluster_index];
     }
-    BOOST_FOREACH (const int cluster_size, cluster_sizes) {
+    for (const auto cluster_size: cluster_sizes) {
       if (cluster_size == 0) { goto CONTINUE_OUTER_LOOP; }
     }
     break;
@@ -228,8 +227,7 @@ int main(int argc, const char **argv) {
       cluster_numbers[iter.row()] = iter.col();
     }
   }
-  BOOST_FOREACH (
-      const ClusterIndicatorMatrix::Index cluster_id, cluster_numbers) {
+  for (const auto cluster_id: cluster_numbers) {
     std::cout << cluster_id << std::endl;
   }
 
