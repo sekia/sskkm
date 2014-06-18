@@ -41,7 +41,7 @@ You can learn usage of the library via sample applications in `/sample` director
 Copyrigth and License
 ---
 
-Copyright (c) 2012 SATOH, Koichi <sekia@cl.cs.okayama-u.ac.jp>, All rights reserved.
+Copyright (c) 2012-2014 SATOH, Koichi <r.sekia@gmail.com>, All rights reserved.
 
 The MIT License
 
