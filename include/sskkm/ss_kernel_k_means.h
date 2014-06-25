@@ -59,10 +59,10 @@ typedef UndirectedGraph CannotLinks;
 
 enum ClusteringObjective { kRatioCut, kRatioAssociation, kNormalizedCut };
 
-class InconsistentConstraints : public RuntimeError {
+class InconsistentConstraints : public std::runtime_error {
  public:
   explicit InconsistentConstraints(const std::string &what_arg)
-      : RuntimeError(what_arg) {}
+      : std::runtime_error(what_arg) {}
 };
 
 namespace internal {
@@ -193,7 +193,7 @@ inline ConstraintPenaltyMatrix ComputeConstraintPenaltyMatrix(
     const MustLinks &must_links,
     const CannotLinks &cannot_links) {
   if (boost::num_vertices(must_links) != boost::num_vertices(cannot_links)) {
-    throw InvalidArgument(
+    throw std::invalid_argument(
         "The numbers of vertices in must-links and cannot-links must be"
         " equal.");
   }
@@ -347,7 +347,7 @@ inline ClusterIndicatorMatrix InitializeFarthestFirst(
     std::ostringstream message;
     message << "Failed to cluster initialize: Cannot set up " << k
             << " cluster(s) such that satisfies given constraints.";
-    throw RuntimeError(message.str());
+    throw std::runtime_error(message.str());
   }
 
   // Finds the largest component from candidate components.
@@ -450,7 +450,7 @@ inline ClusterIndicatorMatrix ExecuteSSKernelKMeans(
       return ExecuteKernelKMeans(clusters, k_min, kernels, converged);
     }
     default: {
-      throw InvalidArgument("Unknown clustering objective.");
+      throw std::invalid_argument("Unknown clustering objective.");
     }
   }
 }

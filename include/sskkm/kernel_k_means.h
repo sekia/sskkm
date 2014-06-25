@@ -176,10 +176,10 @@ inline void ComputeWeightedKernelMatrix(
 
 }  // namespace internal
 
-class TooFewClustersLeft : public RuntimeError {
+class TooFewClustersLeft : public std::runtime_error {
  public:
   explicit TooFewClustersLeft(const std::string &what_arg)
-      : RuntimeError(what_arg) {}
+      : std::runtime_error(what_arg) {}
 };
 
 template <typename ConvergencePredicator>
@@ -189,10 +189,10 @@ inline ClusterIndicatorMatrix ExecuteKernelKMeans(
     const KernelMatrix &kernels,
     ConvergencePredicator &converged) {
   if (kernels.rows() != kernels.cols()) {
-    throw InvalidArgument("Kernel matrix must be a square matrix");
+    throw std::invalid_argument("Kernel matrix must be a square matrix");
   }
   if (initial_clusters.rows() != kernels.rows()) {
-    throw InvalidArgument(
+    throw std::invalid_argument(
         "Cluster indicator matrix doesn't match for kernel matrix in size");
   }
 
@@ -221,14 +221,14 @@ inline ClusterIndicatorMatrix ExecuteWeightedKernelKMeans(
     ConvergencePredicator &converged,
     bool less_memory = false) {
   if (kernels.rows() != kernels.cols()) {
-    throw InvalidArgument("Kernel matrix must be a square matrix");
+    throw std::invalid_argument("Kernel matrix must be a square matrix");
   }
   if (initial_clusters.rows() != kernels.rows()) {
-    throw InvalidArgument(
+    throw std::invalid_argument(
         "Cluster indicator matrix doesn't match for kernel matrix in size");
   }
   if (weights.size() != initial_clusters.rows()) {
-    throw InvalidArgument("Not enough or too many weights");
+    throw std::invalid_argument("Not enough or too many weights");
   }
 
   ClusterIndicatorMatrix clusters = initial_clusters;

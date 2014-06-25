@@ -34,23 +34,11 @@ typedef SparseVector ClusterIndicatorVector;
  */
 typedef SparseMatrix ClusterIndicatorMatrix;
 
-class InvalidArgument : public std::invalid_argument {
-public:
-  explicit InvalidArgument(const std::string &what_arg)
-      : std::invalid_argument(what_arg) {}
-};
-
-class RuntimeError : public std::runtime_error {
-public:
-  explicit RuntimeError(const std::string &what_arg)
-      : std::runtime_error(what_arg) {}
-};
-
 /**
    Reads entire bytes of a stream.
  */
 inline std::string SlurpStream(std::istream &in) {
-  if (!in.good()) { throw InvalidArgument("The stream is not readable"); }
+  if (!in.good()) { throw std::invalid_argument("The stream is not readable"); }
   std::ostringstream buf;
   buf << in.rdbuf();
   return buf.str();
