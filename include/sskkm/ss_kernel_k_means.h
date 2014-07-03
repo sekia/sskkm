@@ -59,12 +59,6 @@ typedef UndirectedGraph CannotLinks;
 
 enum ClusteringObjective { kRatioCut, kRatioAssociation, kNormalizedCut };
 
-class InconsistentConstraints : public std::runtime_error {
- public:
-  explicit InconsistentConstraints(const std::string& what_arg)
-      : std::runtime_error(what_arg) {}
-};
-
 namespace internal {
 
 typedef boost::graph_traits<UndirectedGraph>::vertices_size_type ComponentIndex;
