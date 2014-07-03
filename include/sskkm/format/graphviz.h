@@ -27,7 +27,7 @@ inline void SetDefaultEdgeWeight(
 }  // namespace internal
 
 inline UndirectedGraph ReadUndirectedGraph(
-    const std::string &source,
+    const std::string& source,
     double default_edge_weight) {
   UndirectedGraph graph;
   boost::dynamic_properties properties;

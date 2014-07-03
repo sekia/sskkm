@@ -10,20 +10,20 @@
 namespace sskkm {
 
 inline KernelMatrix ComputePolynomialKernelMatrix(
-    const DenseMatrix &vectors, double linear_shift, double exponent) {
+    const DenseMatrix& vectors, double linear_shift, double exponent) {
   return KernelMatrix(
       ((vectors.transpose() * vectors).array() + linear_shift).pow(exponent));
 }
 
 inline KernelMatrix ComputePolynomialKernelMatrix(
-    const SparseMatrix &vectors, double linear_shift, double exponent) {
+    const SparseMatrix& vectors, double linear_shift, double exponent) {
   DenseMatrix products = (vectors.transpose() * vectors).eval();
   return KernelMatrix((products.array() + linear_shift).pow(exponent));
 }
 
 template <typename Matrix>
 inline KernelMatrix ComputeGaussianKernelMatrix(
-    const Matrix &vectors, double deviation) {
+    const Matrix& vectors, double deviation) {
   DenseMatrix products = (vectors.transpose() * vectors).eval();
   KernelMatrix exponents =
       (products.diagonal().replicate(1, vectors.cols()) +

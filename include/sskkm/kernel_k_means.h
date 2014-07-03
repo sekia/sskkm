@@ -45,8 +45,8 @@ namespace internal {
   distances between a vector and each cluster centroid.
 */
 inline NormMatrix ComputeNormMatrix(
-    const ClusterIndicatorMatrix &clusters,
-    const KernelMatrix &kernels) {
+    const ClusterIndicatorMatrix& clusters,
+    const KernelMatrix& kernels) {
   // Each element is the number of vectors in corresponding cluster.
   Eigen::ArrayXd cluster_sizes(clusters.cols());
   for (ClusterIndicatorMatrix::Index i = 0; i < clusters.cols(); ++i) {
@@ -90,9 +90,9 @@ inline NormMatrix ComputeNormMatrix(
    1st term as well as the unweighted version.
 */
 inline NormMatrix ComputeWeightedNormMatrix(
-    const ClusterIndicatorMatrix &clusters,
-    const KernelMatrix &kernels,
-    const WeightVector &weights) {
+    const ClusterIndicatorMatrix& clusters,
+    const KernelMatrix& kernels,
+    const WeightVector& weights) {
   DenseVector cluster_total_weights = clusters.transpose() * weights;
 
   DenseMatrix kc = kernels.cwiseProduct(
@@ -114,11 +114,11 @@ inline NormMatrix ComputeWeightedNormMatrix(
 }
 
 inline NormMatrix ComputeWeightedNormMatrix(
-    const ClusterIndicatorMatrix &clusters,
-    const KernelMatrix &kernels,
-    const KernelMatrix &weighted_kernels,
-    const KernelMatrix &weighted_weighted_kernels,
-    const WeightVector &weights) {
+    const ClusterIndicatorMatrix& clusters,
+    const KernelMatrix& kernels,
+    const KernelMatrix& weighted_kernels,
+    const KernelMatrix& weighted_weighted_kernels,
+    const WeightVector& weights) {
   DenseVector cluster_total_weights = clusters.transpose() * weights;
 
   DenseMatrix term2s = -2 * (weighted_kernels * clusters).cwiseQuotient(
@@ -137,7 +137,7 @@ inline NormMatrix ComputeWeightedNormMatrix(
    decrease.
  */
 inline ClusterIndicatorMatrix ComputeClusterIndicatorMatrix(
-    const NormMatrix &norms) {
+    const NormMatrix& norms) {
   std::vector<SparseMatrixCoefficient> triplets;
   for (NormMatrix::Index i = 0; i < norms.rows(); ++i) {
     NormMatrix::Index cluster_index;
@@ -164,8 +164,8 @@ inline ClusterIndicatorMatrix ComputeClusterIndicatorMatrix(
 }
 
 inline void ComputeWeightedKernelMatrix(
-    const KernelMatrix &kernels,
-    const WeightVector &weights,
+    const KernelMatrix& kernels,
+    const WeightVector& weights,
     KernelMatrix *weighted_kernels,
     KernelMatrix *weighted_weighted_kernels) {
   weighted_kernels->rowwise() = weights.transpose();
@@ -178,16 +178,16 @@ inline void ComputeWeightedKernelMatrix(
 
 class TooFewClustersLeft : public std::runtime_error {
  public:
-  explicit TooFewClustersLeft(const std::string &what_arg)
+  explicit TooFewClustersLeft(const std::string& what_arg)
       : std::runtime_error(what_arg) {}
 };
 
 template <typename ConvergencePredicator>
 inline ClusterIndicatorMatrix ExecuteKernelKMeans(
-    const ClusterIndicatorMatrix &initial_clusters,
+    const ClusterIndicatorMatrix& initial_clusters,
     int k_min,
-    const KernelMatrix &kernels,
-    ConvergencePredicator &converged) {
+    const KernelMatrix& kernels,
+    ConvergencePredicator& converged) {
   if (kernels.rows() != kernels.cols()) {
     throw std::invalid_argument("Kernel matrix must be a square matrix");
   }
@@ -214,11 +214,11 @@ inline ClusterIndicatorMatrix ExecuteKernelKMeans(
 
 template <typename ConvergencePredicator>
 inline ClusterIndicatorMatrix ExecuteWeightedKernelKMeans(
-    const ClusterIndicatorMatrix &initial_clusters,
+    const ClusterIndicatorMatrix& initial_clusters,
     int k_min,
-    const KernelMatrix &kernels,
-    const WeightVector &weights,
-    ConvergencePredicator &converged,
+    const KernelMatrix& kernels,
+    const WeightVector& weights,
+    ConvergencePredicator& converged,
     bool less_memory = false) {
   if (kernels.rows() != kernels.cols()) {
     throw std::invalid_argument("Kernel matrix must be a square matrix");

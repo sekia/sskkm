@@ -9,7 +9,7 @@
 namespace sskkm {
 
 inline bool operator==(
-    const SparseMatrix &matrix1, const SparseMatrix &matrix2) {
+    const SparseMatrix& matrix1, const SparseMatrix& matrix2) {
   if (matrix1.rows() != matrix2.rows() || matrix1.cols() != matrix2.cols()) {
     return false;
   }

@@ -37,7 +37,7 @@ typedef SparseMatrix ClusterIndicatorMatrix;
 /**
    Reads entire bytes of a stream.
  */
-inline std::string SlurpStream(std::istream &in) {
+inline std::string SlurpStream(std::istream& in) {
   if (!in.good()) { throw std::invalid_argument("The stream is not readable"); }
   std::ostringstream buf;
   buf << in.rdbuf();

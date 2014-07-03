@@ -25,7 +25,7 @@ namespace {
 
 template <typename Matrix>
 KernelMatrix ComputeKernelMatrix(
-    const Matrix &vectors, const std::vector<std::string> &kernel_parameters) {
+    const Matrix& vectors, const std::vector<std::string>& kernel_parameters) {
   if (kernel_parameters.size() == 0) {
     throw std::invalid_argument("No kernel parameters are given.");
   }
@@ -62,7 +62,7 @@ KernelMatrix ComputeKernelMatrix(
 
 void ExitWithHelpMessage(
     int status,
-    const boost::program_options::options_description &options_description) {
+    const boost::program_options::options_description& options_description) {
   (status == 0 ? std::cout : std::cerr) << options_description << std::endl;
   std::exit(status);
 }
@@ -98,7 +98,7 @@ ClusterIndicatorMatrix InitializeRandomClusters(
 }
 
 std::vector<std::string> SplitString(
-    const std::string &original_string, const std::string &separator) {
+    const std::string& original_string, const std::string& separator) {
   std::vector<std::string> separated_strings;
   std::size_t offset = 0;
   for (std::size_t found_position = original_string.find(separator, offset);
@@ -159,7 +159,7 @@ int main(int argc, const char **argv) {
         opts::parse_command_line(argc, argv, options_description),
         clustering_options);
     opts::notify(clustering_options);
-  } catch (const std::exception &e) {
+  } catch (const std::exception& e) {
     std::cerr << e.what() << std::endl;
     ExitWithHelpMessage(-1, options_description);
   }
@@ -198,7 +198,7 @@ int main(int argc, const char **argv) {
         throw std::invalid_argument("Input matrix is invalid.");
       }
     }
-  } catch (const std::exception &e) {
+  } catch (const std::exception& e) {
     std::cerr << e.what() << std::endl;
     ExitWithHelpMessage(-1, options_description);
   }
@@ -211,7 +211,7 @@ int main(int argc, const char **argv) {
   ConvergencePredicator converged(500, 20, 0.001);
   try {
     clusters = ExecuteKernelKMeans(clusters, k_min, kernels, converged);
-  } catch (const TooFewClustersLeft &) {
+  } catch (const TooFewClustersLeft&) {
     std::cerr << "Number of clusters became less than wanted." << std::endl;
     return 1;
   }

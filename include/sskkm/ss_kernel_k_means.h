@@ -61,7 +61,7 @@ enum ClusteringObjective { kRatioCut, kRatioAssociation, kNormalizedCut };
 
 class InconsistentConstraints : public std::runtime_error {
  public:
-  explicit InconsistentConstraints(const std::string &what_arg)
+  explicit InconsistentConstraints(const std::string& what_arg)
       : std::runtime_error(what_arg) {}
 };
 
@@ -76,11 +76,11 @@ typedef std::map<
 typedef SparseMatrix ComponentIndicatorMatrix;
 
 inline ComponentIndicatorMatrix ComputeComponentIndicatorMatrix(
-    const ComponentIndices &components) {
+    const ComponentIndices& components) {
   ComponentIndex max_component_index = 0;
   std::vector<SparseMatrixCoefficient> component_indicator_coeffs;
   component_indicator_coeffs.reserve(components.size());
-  for (const auto &vertex_component_pair: components) {
+  for (const auto& vertex_component_pair: components) {
     const auto vertex = vertex_component_pair.first;
     const auto component = vertex_component_pair.second;
     if (max_component_index < component) { max_component_index = component; }
@@ -94,7 +94,7 @@ inline ComponentIndicatorMatrix ComputeComponentIndicatorMatrix(
   return component_indicator;
 }
 
-inline DirectedGraph Undirected2Directed(const UndirectedGraph &undirected) {
+inline DirectedGraph Undirected2Directed(const UndirectedGraph& undirected) {
   DirectedGraph directed;
   boost::copy_graph(undirected, directed);
   BOOST_FOREACH (
@@ -109,9 +109,9 @@ inline DirectedGraph Undirected2Directed(const UndirectedGraph &undirected) {
 }
 
 inline CannotLinks ComputeTransitiveCannotLinks(
-    const CannotLinks &given_cannot_links,
-    const ComponentIndices &component_indices,
-    const ComponentIndicatorMatrix &components) {
+    const CannotLinks& given_cannot_links,
+    const ComponentIndices& component_indices,
+    const ComponentIndicatorMatrix& components) {
   // Lists up component pairs in which there is at least one cannot link across
   // them.
   std::vector<
@@ -135,7 +135,7 @@ inline CannotLinks ComputeTransitiveCannotLinks(
       cannot_link_component_pairs.begin(), cannot_link_component_pairs.end());
 
   UndirectedGraph cannot_links(boost::num_vertices(given_cannot_links));
-  for (const auto &cannot_link_component_pair: cannot_link_component_pairs) {
+  for (const auto& cannot_link_component_pair: cannot_link_component_pairs) {
     const auto component1 = cannot_link_component_pair.first;
     const auto component2 = cannot_link_component_pair.second;
     for (ComponentIndicatorMatrix::InnerIterator iter1(components, component1);
@@ -157,7 +157,7 @@ inline CannotLinks ComputeTransitiveCannotLinks(
 }
 
 inline UndirectedGraph ComputeTransitiveMustLinks(
-    const UndirectedGraph &given_must_links) {
+    const UndirectedGraph& given_must_links) {
   DirectedGraph inferred_must_links;
   boost::transitive_closure(
       Undirected2Directed(given_must_links), inferred_must_links);
@@ -166,7 +166,7 @@ inline UndirectedGraph ComputeTransitiveMustLinks(
   return must_links;
 }
 
-inline AdjacencyMatrix ComputeAdjacencyMatrix(const UndirectedGraph &graph) {
+inline AdjacencyMatrix ComputeAdjacencyMatrix(const UndirectedGraph& graph) {
   std::vector<SparseMatrixCoefficient> coeffs;
   coeffs.reserve(2 * boost::num_edges(graph));
   BOOST_FOREACH (
@@ -190,8 +190,8 @@ inline AdjacencyMatrix ComputeAdjacencyMatrix(const UndirectedGraph &graph) {
 }
 
 inline ConstraintPenaltyMatrix ComputeConstraintPenaltyMatrix(
-    const MustLinks &must_links,
-    const CannotLinks &cannot_links) {
+    const MustLinks& must_links,
+    const CannotLinks& cannot_links) {
   if (boost::num_vertices(must_links) != boost::num_vertices(cannot_links)) {
     throw std::invalid_argument(
         "The numbers of vertices in must-links and cannot-links must be"
@@ -201,8 +201,8 @@ inline ConstraintPenaltyMatrix ComputeConstraintPenaltyMatrix(
   std::vector<SparseMatrixCoefficient> coeffs;
   coeffs.reserve(boost::num_edges(must_links) + boost::num_edges(cannot_links));
 
-  const boost::property_map<MustLinks, boost::vertex_index_t>::const_type
-      &vertex_indices = boost::get(boost::vertex_index, must_links);
+  const boost::property_map<MustLinks, boost::vertex_index_t>::const_type&
+      vertex_indices = boost::get(boost::vertex_index, must_links);
 
   BOOST_FOREACH (
       const boost::graph_traits<MustLinks>::edge_descriptor edge,
@@ -240,7 +240,7 @@ inline ConstraintPenaltyMatrix ComputeConstraintPenaltyMatrix(
   return penalty_matrix;
 }
 
-inline DenseVector ComputeVertexDegreeVector(const UndirectedGraph &graph) {
+inline DenseVector ComputeVertexDegreeVector(const UndirectedGraph& graph) {
   DenseVector degrees = DenseVector::Zero(boost::num_vertices(graph));
   BOOST_FOREACH (
       const boost::graph_traits<UndirectedGraph>::vertex_descriptor vertex,
@@ -252,10 +252,10 @@ inline DenseVector ComputeVertexDegreeVector(const UndirectedGraph &graph) {
 }
 
 inline KernelMatrix ComputeNormalizedCutKernelMatirx(
-    const UndirectedGraph &graph,
-    const MustLinks &must_links,
-    const CannotLinks &cannot_links,
-    const WeightVector &degrees,
+    const UndirectedGraph& graph,
+    const MustLinks& must_links,
+    const CannotLinks& cannot_links,
+    const WeightVector& degrees,
     double diagonal_shift) {
   DenseMatrix inversed_degrees = degrees.cwiseInverse().asDiagonal();
   KernelMatrix kernel = inversed_degrees *
@@ -267,9 +267,9 @@ inline KernelMatrix ComputeNormalizedCutKernelMatirx(
 }
 
 inline KernelMatrix ComputeRatioAssociationKernelMatirx(
-    const UndirectedGraph &graph,
-    const MustLinks &must_links,
-    const CannotLinks &cannot_links,
+    const UndirectedGraph& graph,
+    const MustLinks& must_links,
+    const CannotLinks& cannot_links,
     double diagonal_shift) {
   KernelMatrix kernel = ComputeAdjacencyMatrix(graph) +
       ComputeConstraintPenaltyMatrix(must_links, cannot_links);
@@ -281,9 +281,9 @@ inline KernelMatrix ComputeRatioAssociationKernelMatirx(
 }
 
 inline KernelMatrix ComputeRatioCutKernelMatrix(
-    const UndirectedGraph &graph,
-    const MustLinks &must_links,
-    const CannotLinks &cannot_links,
+    const UndirectedGraph& graph,
+    const MustLinks& must_links,
+    const CannotLinks& cannot_links,
     double diagonal_shift) {
   KernelMatrix kernel =
       (ComputeAdjacencyMatrix(graph) +
@@ -297,12 +297,12 @@ inline KernelMatrix ComputeRatioCutKernelMatrix(
 }
 
 inline ComponentIndicatorMatrix ComputeCannotLinkedComponents(
-    const ComponentIndices &component_indices,
-    const ComponentIndicatorMatrix &components,
-    const CannotLinks &cannot_links) {
+    const ComponentIndices& component_indices,
+    const ComponentIndicatorMatrix& components,
+    const CannotLinks& cannot_links) {
   std::vector<bool> is_cannot_linked_component(components.cols());
   BOOST_FOREACH (
-      const boost::graph_traits<CannotLinks>::vertex_descriptor &vertex,
+      const boost::graph_traits<CannotLinks>::vertex_descriptor& vertex,
       boost::vertices(cannot_links)) {
     ComponentIndex component = component_indices.find(vertex)->second;
     is_cannot_linked_component[component] = true;
@@ -326,9 +326,9 @@ inline ComponentIndicatorMatrix ComputeCannotLinkedComponents(
 
 inline ClusterIndicatorMatrix InitializeFarthestFirst(
     std::size_t k,
-    const KernelMatrix &kernels,
-    const MustLinks &must_links,
-    const CannotLinks &cannot_links) {
+    const KernelMatrix& kernels,
+    const MustLinks& must_links,
+    const CannotLinks& cannot_links) {
   MustLinks inferred_must_links = ComputeTransitiveMustLinks(must_links);
   ComponentIndices component_indices;
   boost::connected_components(
@@ -414,10 +414,10 @@ inline ClusterIndicatorMatrix ExecuteSSKernelKMeans(
     int k,
     int k_min,
     ClusteringObjective objective,
-    const UndirectedGraph &graph,
-    const MustLinks &must_links,
-    const CannotLinks &cannot_links,
-    ConvergencePredicator &converged,
+    const UndirectedGraph& graph,
+    const MustLinks& must_links,
+    const CannotLinks& cannot_links,
+    ConvergencePredicator& converged,
     double diagonal_shift = 0.0,
     bool less_memory = false) {
   switch (objective) {

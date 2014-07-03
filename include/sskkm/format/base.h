@@ -9,7 +9,7 @@ namespace sskkm {
 
 class InvalidFormat : public std::invalid_argument {
  public:
-  explicit InvalidFormat(const std::string &what_arg) :
+  explicit InvalidFormat(const std::string& what_arg) :
       std::invalid_argument(what_arg) {}
 };
 

@@ -22,8 +22,8 @@ class Counter {
   void Reset() { current_count_ = 0; }
 
  private:
-  Counter(const Counter &);
-  Counter &operator=(const Counter &);
+  Counter(const Counter&);
+  Counter& operator=(const Counter&);
   int count_;
   int current_count_;
 };

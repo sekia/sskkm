@@ -29,13 +29,13 @@ namespace {
 
 void ExitWithHelpMessage(
     int status,
-    const boost::program_options::options_description &options_description) {
+    const boost::program_options::options_description& options_description) {
   (status == 0 ? std::cout : std::cerr) << options_description << std::endl;
   std::exit(status);
 }
 
 ClusteringObjective DetermineObjectiveFunction(
-    const std::string &objective_name) {
+    const std::string& objective_name) {
   if (objective_name == "ratio_cut") {
     return kRatioCut;
   } else if (objective_name == "ratio_association") {
@@ -103,7 +103,7 @@ int main(int argc, const char **argv) {
         opts::parse_command_line(argc, argv, options_description),
         clustering_options);
     opts::notify(clustering_options);
-  } catch (const std::exception &e) {
+  } catch (const std::exception& e) {
     std::cerr << e.what() << std::endl;
     ExitWithHelpMessage(-1, options_description);
   }
@@ -141,7 +141,7 @@ int main(int argc, const char **argv) {
     } else {
       cannot_links = CannotLinks(boost::num_vertices(graph));
     }
-  } catch (const std::exception &e) {
+  } catch (const std::exception& e) {
     std::cerr << e.what() << std::endl;
     return -1;
   }
@@ -161,7 +161,7 @@ int main(int argc, const char **argv) {
     for (const auto cluster_id: cluster_numbers) {
       std::cout << cluster_id << std::endl;
     }
-  } catch (const std::exception &e) {
+  } catch (const std::exception& e) {
     std::cerr << e.what() << std::endl;
     return -1;
   }
