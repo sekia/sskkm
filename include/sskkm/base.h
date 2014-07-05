@@ -9,22 +9,22 @@
 
 namespace sskkm {
 
-typedef Eigen::VectorXd DenseVector;
+using DenseVector = Eigen::VectorXd;
 
-typedef Eigen::MatrixXd DenseMatrix;
+using DenseMatrix = Eigen::MatrixXd;
 
-typedef Eigen::SparseVector<double> SparseVector;
+using SparseVector = Eigen::SparseVector<double>;
 
-typedef Eigen::SparseMatrix<double> SparseMatrix;
+using SparseMatrix = Eigen::SparseMatrix<double>;
 
-typedef Eigen::Triplet<double> SparseMatrixCoefficient;
+using SparseMatrixCoefficient = Eigen::Triplet<double>;
 
 /**
    N-size vector where N is the number of nodes. Each element indicates whether
    node having corresponding order belongs to a cluster (value 1.0) or not
    (0.0).
  */
-typedef SparseVector ClusterIndicatorVector;
+using ClusterIndicatorVector = SparseVector;
 
 /**
    N x C matrix where N is the number of nodes and C is the number of clusters.
@@ -32,7 +32,7 @@ typedef SparseVector ClusterIndicatorVector;
    Otherwise 0.0. i.e., the c-th column vector of the matrix is a
    ClusterIndicatorVector for the c-th cluster.
  */
-typedef SparseMatrix ClusterIndicatorMatrix;
+using ClusterIndicatorMatrix = SparseMatrix;
 
 /**
    Reads entire bytes of a stream.

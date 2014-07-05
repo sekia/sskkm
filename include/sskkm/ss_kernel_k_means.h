@@ -24,50 +24,50 @@ namespace sskkm {
 
 namespace internal {
 
-typedef std::size_t VertexIndex;
+using VertexIndex = std::size_t;
 
-typedef boost::property<
+using VertexProperty = boost::property<
   boost::vertex_name_t,
   std::string,
-  boost::property<boost::vertex_index_t, VertexIndex> > VertexProperty;
+  boost::property<boost::vertex_index_t, VertexIndex>>;
 
-typedef boost::property<boost::edge_weight_t, double> EdgeProperty;
+using EdgeProperty = boost::property<boost::edge_weight_t, double>;
 
-typedef SparseMatrix AdjacencyMatrix;  // aka. Similarity matrix.
+using AdjacencyMatrix = SparseMatrix;  // aka. Similarity matrix.
 
-typedef SparseMatrix ConstraintPenaltyMatrix;
+using ConstraintPenaltyMatrix = SparseMatrix;
 
-typedef boost::adjacency_list<
+using DirectedGraph = boost::adjacency_list<
   boost::hash_setS,
   boost::vecS,
   boost::directedS,
   internal::VertexProperty,
-  internal::EdgeProperty> DirectedGraph;
+  internal::EdgeProperty>;
 
 }  // namespace internal
 
-typedef boost::adjacency_list<
+using UndirectedGraph = boost::adjacency_list<
   boost::hash_setS,
   boost::vecS,
   boost::undirectedS,
   internal::VertexProperty,
-  internal::EdgeProperty> UndirectedGraph;
+  internal::EdgeProperty>;
 
-typedef UndirectedGraph MustLinks;
+using MustLinks = UndirectedGraph;
 
-typedef UndirectedGraph CannotLinks;
+using CannotLinks = UndirectedGraph;
 
 enum ClusteringObjective { kRatioCut, kRatioAssociation, kNormalizedCut };
 
 namespace internal {
 
-typedef boost::graph_traits<UndirectedGraph>::vertices_size_type ComponentIndex;
+using ComponentIndex = boost::graph_traits<UndirectedGraph>::vertices_size_type;
 
-typedef std::map<
+using ComponentIndices = std::map<
   boost::graph_traits<UndirectedGraph>::vertex_descriptor,
-  ComponentIndex> ComponentIndices;
+  ComponentIndex>;
 
-typedef SparseMatrix ComponentIndicatorMatrix;
+using ComponentIndicatorMatrix = SparseMatrix;
 
 inline ComponentIndicatorMatrix ComputeComponentIndicatorMatrix(
     const ComponentIndices& components) {

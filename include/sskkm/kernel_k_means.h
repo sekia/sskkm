@@ -13,20 +13,20 @@ namespace sskkm {
    K(nv, mv) where K is the kernel function, and nv, mv are the n-th and m-th 
    vectors respectively.
  */
-typedef DenseMatrix KernelMatrix;
+using KernelMatrix = DenseMatrix;
 
 /**
    N x C matrix where N is the number of vectors and C is the number of 
    clusters. The element at (n, c) is the distance between the n-th vector and 
    centroid of the c-th cluster in a kernel space.
  */
-typedef DenseMatrix NormMatrix;
+using NormMatrix = DenseMatrix;
 
 /**
    N-length vector where N is the number of vectors. Each scalar represents the 
    weight of corresponding vectors.
  */
-typedef DenseVector WeightVector;
+using WeightVector = DenseVector;
 
 namespace internal {
 
