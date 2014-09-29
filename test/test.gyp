@@ -13,7 +13,7 @@
         '<(DEPTH)', 
       ],
       'link_settings': {
-        'libraries': ['-lgtest', '-lgtest_main',],
+        'libraries': ['-lgtest', '-lgtest_main', '-lpthread'],
       },
     },
   ],
