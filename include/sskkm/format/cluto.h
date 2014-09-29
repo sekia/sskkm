@@ -13,7 +13,7 @@ namespace sskkm {
 
 namespace cluto {
 
-enum MatrixType { kInvalidMatrix, kDenseMatrix, kSparseMatrix };
+enum class MatrixType { InvalidMatrix, DenseMatrix, SparseMatrix };
 
 namespace internal {
 
@@ -170,23 +170,23 @@ inline MatrixType DetermineMatrixType(const std::string& src) {
     try {
       boost::lexical_cast<unsigned>(*iter);
     } catch (const boost::bad_lexical_cast& e) {
-      return kInvalidMatrix;
+      return MatrixType::InvalidMatrix;
     }
     ++num_header_elements;
   }
 
   switch (num_header_elements) {
     case 2:
-      return kDenseMatrix;
+      return MatrixType::DenseMatrix;
     case 3:
-      return kSparseMatrix;
+      return MatrixType::SparseMatrix;
     default:
-      return kInvalidMatrix;
+      return MatrixType::InvalidMatrix;
   }
 }
 
 inline DenseMatrix ParseDenseMatrix(const std::string& src, bool transposed = false) {
-  if (DetermineMatrixType(src) != kDenseMatrix) {
+  if (DetermineMatrixType(src) != MatrixType::DenseMatrix) {
     throw InvalidFormat("Invalid dense matrix foramt");
   }
 
@@ -201,7 +201,7 @@ inline DenseMatrix ParseDenseMatrix(const std::string& src, bool transposed = fa
 }
 
 inline SparseMatrix ParseSparseMatrix(const std::string &src, bool transposed = false) {
-  if (DetermineMatrixType(src) != kSparseMatrix) {
+  if (DetermineMatrixType(src) != MatrixType::SparseMatrix) {
     throw InvalidFormat("Invalid sparse matrix foramt");
   }
 

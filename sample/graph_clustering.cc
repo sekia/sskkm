@@ -37,11 +37,11 @@ void ExitWithHelpMessage(
 ClusteringObjective DetermineObjectiveFunction(
     const std::string& objective_name) {
   if (objective_name == "ratio_cut") {
-    return kRatioCut;
+    return ClusteringObjective::RatioCut;
   } else if (objective_name == "ratio_association") {
-    return kRatioAssociation;
+    return ClusteringObjective::RatioAssociation;
   } else if (objective_name == "normalized_cut") {
-    return kNormalizedCut;
+    return ClusteringObjective::NormalizedCut;
   } else {
     throw std::invalid_argument(
         "Not supported objective function: " + objective_name);

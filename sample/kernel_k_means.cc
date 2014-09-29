@@ -177,7 +177,7 @@ int main(int argc, const char **argv) {
   ClusterIndicatorMatrix clusters;
   try {
     switch (DetermineMatrixType(cluto_matrix)) {
-      case kDenseMatrix: {
+      case MatrixType::DenseMatrix: {
         /*
           Usually, vector data are serialized as *row* vectors. So we need to
           transpose it by setting on |transpose| flag as optional 2nd argument.
@@ -187,7 +187,7 @@ int main(int argc, const char **argv) {
         clusters = InitializeRandomClusters(dense_vectors.cols(), k);
         break;
       }
-      case kSparseMatrix: {
+      case MatrixType::SparseMatrix: {
         // Ditto.
         SparseMatrix sparse_vectors = ParseSparseMatrix(cluto_matrix, true);
         kernels = ComputeKernelMatrix(sparse_vectors, kernel_parameters);

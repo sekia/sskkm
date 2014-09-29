@@ -13,21 +13,21 @@ TEST(ClutoMatrixTest, CanDetermineMatrixType) {
       "1 1 2\n"
       "3 5 8\n"
       "13 21 34\n";
-  EXPECT_EQ(kInvalidMatrix, DetermineMatrixType(invalid_header));
+  EXPECT_EQ(MatrixType::InvalidMatrix, DetermineMatrixType(invalid_header));
 
   std::string dense_matrix =
       "3 3\n"
       "1 1 2\n"
       "3 5 8\n"
       "13 21 34\n";
-  EXPECT_EQ(kDenseMatrix, DetermineMatrixType(dense_matrix));
+  EXPECT_EQ(MatrixType::DenseMatrix, DetermineMatrixType(dense_matrix));
 
   std::string sparse_matrix =
       "3 10 9\n"
       "1 1.0 3 1.0 5 1.0\n"
       "4 3.0 7 2.0 10 1.0\n"
       "2 2.0 4 4.0 6 6.0\n";
-  EXPECT_EQ(kSparseMatrix, DetermineMatrixType(sparse_matrix));
+  EXPECT_EQ(MatrixType::SparseMatrix, DetermineMatrixType(sparse_matrix));
 }
 
 TEST(ClutoMatrixTest, CanParseDenseMatrix) {

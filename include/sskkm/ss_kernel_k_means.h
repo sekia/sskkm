@@ -57,7 +57,11 @@ using MustLinks = UndirectedGraph;
 
 using CannotLinks = UndirectedGraph;
 
-enum ClusteringObjective { kRatioCut, kRatioAssociation, kNormalizedCut };
+enum class ClusteringObjective {
+  NormalizedCut,
+  RatioAssociation,
+  RatioCut,
+};
 
 namespace internal {
 
@@ -415,7 +419,7 @@ inline ClusterIndicatorMatrix ExecuteSSKernelKMeans(
     double diagonal_shift = 0.0,
     bool less_memory = false) {
   switch (objective) {
-    case kNormalizedCut: {
+    case ClusteringObjective::NormalizedCut: {
       WeightVector degrees = internal::ComputeVertexDegreeVector(graph);
       KernelMatrix kernels =
           internal::ComputeNormalizedCutKernelMatirx(
@@ -426,7 +430,7 @@ inline ClusterIndicatorMatrix ExecuteSSKernelKMeans(
       return ExecuteWeightedKernelKMeans(
           clusters, k_min, kernels, degrees, converged, less_memory);
     }
-    case kRatioAssociation: {
+    case ClusteringObjective::RatioAssociation: {
       KernelMatrix kernels =
           internal::ComputeRatioAssociationKernelMatirx(
               graph, must_links, cannot_links, diagonal_shift);
@@ -435,16 +439,13 @@ inline ClusterIndicatorMatrix ExecuteSSKernelKMeans(
               k, kernels, must_links, cannot_links);
       return ExecuteKernelKMeans(clusters, k_min, kernels, converged);
     }
-    case kRatioCut: {
+    case ClusteringObjective::RatioCut: {
       KernelMatrix kernels =
           internal::ComputeRatioCutKernelMatrix(
               graph, must_links, cannot_links, diagonal_shift);
       ClusterIndicatorMatrix clusters = internal::InitializeFarthestFirst(
               k, kernels, must_links, cannot_links);
       return ExecuteKernelKMeans(clusters, k_min, kernels, converged);
-    }
-    default: {
-      throw std::invalid_argument("Unknown clustering objective.");
     }
   }
 }
