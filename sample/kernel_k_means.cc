@@ -3,11 +3,10 @@
 #include <boost/program_options/parsers.hpp>
 #include <boost/program_options/value_semantic.hpp>
 #include <boost/program_options/variables_map.hpp>
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_int_distribution.hpp>
 #include <cstdlib>
 #include <exception>
 #include <iostream>
+#include <random>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -67,13 +66,13 @@ void ExitWithHelpMessage(
   std::exit(status);
 }
 
-boost::random::mt19937 rng_;
+std::mt19937 rng_;
 
 // TODO(sekia): Move to library.
 ClusterIndicatorMatrix InitializeRandomClusters(
     ClusterIndicatorMatrix::Index num_vectors,
     ClusterIndicatorMatrix::Index num_clusters) {
-  boost::random::uniform_int_distribution<> dist(0, num_clusters - 1);
+  std::uniform_int_distribution<> dist(0, num_clusters - 1);
 
   std::vector<SparseMatrixCoefficient> coeffs(num_vectors);
   std::vector<int> cluster_sizes(num_clusters);
