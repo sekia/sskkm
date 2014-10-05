@@ -3,6 +3,7 @@
   'target_defaults': {
     'include_dirs': [
       '<(DEPTH)/include',
+      '<(DEPTH)/eigen-3.1.4',
     ],
     'includes': [
       'configure.gypi',

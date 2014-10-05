@@ -11,7 +11,7 @@ Requirements
 sskkm depends on 2 external C++ libraries:
 
 - boost 1.50 -- http://www.boost.org/
-- Eigen 3.1 -- http://eigen.tuxfamily.org/
+- Eigen 3.1 (bundled with this distribution) -- http://eigen.tuxfamily.org/
 
 Installation
 ---
