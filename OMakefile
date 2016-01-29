@@ -1,0 +1,11 @@
+section
+  CXXFLAGS += -g -O0
+  vmount(-l, sample, sample_debug)
+  vmount(-l, test, test_debug)
+  .SUBDIRS: sample_debug test_debug
+
+section
+  CXXFLAGS += -DNDEBUG -O3
+  vmount(-l, sample, sample_release)
+  vmount(-l, test, test_release)
+  .SUBDIRS: sample_release test_release

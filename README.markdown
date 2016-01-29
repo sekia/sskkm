@@ -20,16 +20,16 @@ Download the distribution and run `tar xzf sskkm-x.x.x.tar.gz`. Then you should 
 
 ```
 sskkm/
-|---README   - This file.
-|---build.pl - Build script.
-|---include/ - C++ headers.
-|---sample/  - Sample programs.
-|---test/    - Unit tests.
+|---README          - This file.
+|---include/        - C++ headers.
+|---sample/         - Sample programs.
+|---test/           - Unit tests.
+|---{sample,test}_* - Working directories for building sample programs/tests.
 ```
 
 Since sskkm is a header-only library, no installation instruction is needed. You can just copy the header files under `/include` directory to wherever compiler knows then get ready.
 
-If you want to build a unit test and sample programs, Install GYP (http://code.google.com/p/gyp/) and run `perl build.pl --configuration=Release sample test` under the distrinbution's root directory. And you should have executables at `out/Release`.
+If you want to build a unit test and sample programs, Install [OMake](http://omake.metaprl.org/) and run `omake` on the distrinbution's root directory. And you should have executables at `{sample,test}_*` directories.
 
 Documentation
 ---
@@ -41,7 +41,7 @@ You can learn usage of the library via sample applications in `/sample` director
 Copyrigth and License
 ---
 
-Copyright (c) 2012-2014 SATOH, Koichi <r.sekia@gmail.com>, All rights reserved.
+Copyright (c) 2012-2016 Koichi SATOH, All rights reserved.
 
 The MIT License
 

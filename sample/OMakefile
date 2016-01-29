@@ -1,0 +1,17 @@
+.PHONY: all clean
+
+LDFLAGS += -lboost_graph -lboost_program_options
+
+INCLUDES[] +=
+  ../eigen-3.1.4
+  ../include
+
+CXXProgram(graph_clustering, graph_clustering)
+CXXProgram(kernel_k_means, kernel_k_means)
+
+all: graph_clustering$(EXE) kernel_k_means$(EXE)
+
+clean:
+  $(rm -v $(filter-proper-targets $(glob *)))
+
+.DEFAULT: all
