@@ -2,7 +2,6 @@
 #define SSKKM_SS_K_MEANS_H_
 
 #include <algorithm>
-#include <boost/foreach.hpp>
 // XXX: Why transitive_closure.hpp needs to be loaded prior to other BGL
 // headers?
 #include <boost/graph/transitive_closure.hpp>
@@ -97,12 +96,13 @@ inline ComponentIndicatorMatrix ComputeComponentIndicatorMatrix(
 inline DirectedGraph Undirected2Directed(const UndirectedGraph& undirected) {
   DirectedGraph directed;
   boost::copy_graph(undirected, directed);
-  BOOST_FOREACH (
-      const boost::graph_traits<DirectedGraph>::edge_descriptor edge,
-      boost::edges(directed)) {
+  boost::graph_traits<DirectedGraph>::edge_iterator iter, iter_end;
+  for (std::tie(iter, iter_end) = boost::edges(directed);
+       iter != iter_end;
+       ++iter) {
     boost::add_edge(
-        boost::target(edge, directed),
-        boost::source(edge, directed),
+        boost::target(*iter, directed),
+        boost::source(*iter, directed),
         directed);
   }  
   return directed;
@@ -116,13 +116,14 @@ inline CannotLinks ComputeTransitiveCannotLinks(
   // them.
   std::vector<
     std::pair<ComponentIndex, ComponentIndex> > cannot_link_component_pairs;
-  BOOST_FOREACH (
-      const boost::graph_traits<CannotLinks>::edge_descriptor given_edge,
-      boost::edges(given_cannot_links)) {
+  boost::graph_traits<CannotLinks>::edge_iterator iter, iter_end;
+  for (std::tie(iter, iter_end) = boost::edges(given_cannot_links);
+       iter != iter_end;
+       ++iter) {
     ComponentIndex component1 = component_indices.find(
-        boost::source(given_edge, given_cannot_links))->second;
+        boost::source(*iter, given_cannot_links))->second;
     ComponentIndex component2 = component_indices.find(
-        boost::target(given_edge, given_cannot_links))->second;
+        boost::target(*iter, given_cannot_links))->second;
     // TODO(sekia): Inconsistent constraint. Probably should raise an error.
     if (component1 == component2) { continue; }
     if (component1 > component2) { std::swap(component1, component2); }
@@ -169,15 +170,16 @@ inline UndirectedGraph ComputeTransitiveMustLinks(
 inline AdjacencyMatrix ComputeAdjacencyMatrix(const UndirectedGraph& graph) {
   std::vector<SparseMatrixCoefficient> coeffs;
   coeffs.reserve(2 * boost::num_edges(graph));
-  BOOST_FOREACH (
-      const boost::graph_traits<UndirectedGraph>::edge_descriptor edge,
-      boost::edges(graph)) {
-    double weight = boost::get(boost::edge_weight, graph, edge);
+  boost::graph_traits<UndirectedGraph>::edge_iterator iter, iter_end;
+  for (std::tie(iter, iter_end) = boost::edges(graph);
+       iter != iter_end;
+       ++iter) {
+    double weight = boost::get(boost::edge_weight, graph, *iter);
     VertexIndex
         source_index = boost::get(
-            boost::vertex_index, graph, boost::source(edge, graph)),
+            boost::vertex_index, graph, boost::source(*iter, graph)),
         target_index = boost::get(
-            boost::vertex_index, graph, boost::target(edge, graph));
+            boost::vertex_index, graph, boost::target(*iter, graph));
     coeffs.push_back(
         SparseMatrixCoefficient(source_index, target_index, weight));
     coeffs.push_back(
@@ -204,30 +206,32 @@ inline ConstraintPenaltyMatrix ComputeConstraintPenaltyMatrix(
   const boost::property_map<MustLinks, boost::vertex_index_t>::const_type&
       vertex_indices = boost::get(boost::vertex_index, must_links);
 
-  BOOST_FOREACH (
-      const boost::graph_traits<MustLinks>::edge_descriptor edge,
-      boost::edges(must_links)) {
-    double weight = boost::get(boost::edge_weight, must_links, edge);
+  boost::graph_traits<MustLinks>::edge_iterator iter_ml, iter_ml_end;
+  for (std::tie(iter_ml, iter_ml_end) = boost::edges(must_links);
+       iter_ml != iter_ml_end;
+       ++iter_ml) {
+    double weight = boost::get(boost::edge_weight, must_links, *iter_ml);
     internal::VertexIndex
         source_index = boost::get(
-            vertex_indices, boost::source(edge, must_links)),
+            vertex_indices, boost::source(*iter_ml, must_links)),
         target_index = boost::get(
-            vertex_indices, boost::target(edge, must_links));
+            vertex_indices, boost::target(*iter_ml, must_links));
     coeffs.push_back(
         SparseMatrixCoefficient(source_index, target_index, weight));
     coeffs.push_back(
         SparseMatrixCoefficient(target_index, source_index, weight));
   }
 
-  BOOST_FOREACH (
-      const boost::graph_traits<CannotLinks>::edge_descriptor edge,
-      boost::edges(cannot_links)) {
-    double weight = - boost::get(boost::edge_weight, cannot_links, edge);
+  boost::graph_traits<CannotLinks>::edge_iterator iter_cl, iter_cl_end;
+  for (std::tie(iter_cl, iter_cl_end) = boost::edges(cannot_links);
+       iter_cl != iter_cl_end;
+       ++iter_cl) {
+    double weight = - boost::get(boost::edge_weight, cannot_links, *iter_cl);
     internal::VertexIndex
         source_index = boost::get(
-            vertex_indices, boost::source(edge, cannot_links)),
+            vertex_indices, boost::source(*iter_cl, cannot_links)),
         target_index = boost::get(
-            vertex_indices, boost::target(edge, cannot_links));
+            vertex_indices, boost::target(*iter_cl, cannot_links));
     coeffs.push_back(
         SparseMatrixCoefficient(source_index, target_index, weight));
     coeffs.push_back(
@@ -242,11 +246,12 @@ inline ConstraintPenaltyMatrix ComputeConstraintPenaltyMatrix(
 
 inline DenseVector ComputeVertexDegreeVector(const UndirectedGraph& graph) {
   DenseVector degrees = DenseVector::Zero(boost::num_vertices(graph));
-  BOOST_FOREACH (
-      const boost::graph_traits<UndirectedGraph>::vertex_descriptor vertex,
-      boost::vertices(graph)) {
-    degrees(boost::get(boost::vertex_index, graph, vertex)) =
-        boost::degree(vertex, graph);
+  boost::graph_traits<UndirectedGraph>::vertex_iterator iter, iter_end;
+  for (std::tie(iter, iter_end) = boost::vertices(graph);
+       iter != iter_end;
+       ++iter) {
+    degrees(boost::get(boost::vertex_index, graph, *iter)) =
+        boost::degree(*iter, graph);
   }
   return degrees;
 }
@@ -301,10 +306,11 @@ inline ComponentIndicatorMatrix ComputeCannotLinkedComponents(
     const ComponentIndicatorMatrix& components,
     const CannotLinks& cannot_links) {
   std::vector<bool> is_cannot_linked_component(components.cols());
-  BOOST_FOREACH (
-      const boost::graph_traits<CannotLinks>::vertex_descriptor& vertex,
-      boost::vertices(cannot_links)) {
-    ComponentIndex component = component_indices.find(vertex)->second;
+  boost::graph_traits<CannotLinks>::vertex_iterator iter, iter_end;
+  for (std::tie(iter, iter_end) = boost::vertices(cannot_links);
+       iter != iter_end;
+       ++iter) {
+    ComponentIndex component = component_indices.find(*iter)->second;
     is_cannot_linked_component[component] = true;
   }
   std::vector<ComponentIndex> candidate_component_indices;

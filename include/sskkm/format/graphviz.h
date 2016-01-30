@@ -1,9 +1,9 @@
 #ifndef SSKKM_FORMAT_GRAPHVIZ_H_
 #define SSKKM_FORMAT_GRAPHVIZ_H_
 
-#include <boost/foreach.hpp>
 #include <boost/graph/graphviz.hpp>
 #include <boost/property_map/dynamic_property_map.hpp>
+#include <tuple>
 
 #include "sskkm/ss_kernel_k_means.h"
 
@@ -15,11 +15,12 @@ namespace internal {
 
 inline void SetDefaultEdgeWeight(
     UndirectedGraph *graph, double default_weight) {
-  BOOST_FOREACH (
-      const boost::graph_traits<UndirectedGraph>::edge_descriptor edge,
-      boost::edges(*graph)) {
-    if (boost::get(boost::edge_weight, *graph, edge) == 0.0) {
-      boost::put(boost::edge_weight, *graph, edge, default_weight);
+  boost::graph_traits<UndirectedGraph>::edge_iterator iter, iter_end;
+  for (std::tie(iter, iter_end) = boost::edges(*graph);
+       iter != iter_end;
+       ++iter) {
+    if (boost::get(boost::edge_weight, *graph, *iter) == 0.0) {
+      boost::put(boost::edge_weight, *graph, *iter, default_weight);
     }
   }
 }
