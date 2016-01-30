@@ -82,7 +82,7 @@ ClusterIndicatorMatrix InitializeRandomClusters(
       coeffs[i] = SparseMatrixCoefficient(i, cluster_index, 1.0);
       ++cluster_sizes[cluster_index];
     }
-    for (const auto cluster_size: cluster_sizes) {
+    for (const auto cluster_size : cluster_sizes) {
       if (cluster_size == 0) { goto CONTINUE_OUTER_LOOP; }
     }
     break;
@@ -226,7 +226,7 @@ int main(int argc, const char **argv) {
       cluster_numbers[iter.row()] = iter.col();
     }
   }
-  for (const auto cluster_id: cluster_numbers) {
+  for (const auto cluster_id : cluster_numbers) {
     std::cout << cluster_id << std::endl;
   }
 

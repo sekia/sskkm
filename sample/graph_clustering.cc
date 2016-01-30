@@ -158,7 +158,7 @@ int main(int argc, const char **argv) {
         cluster_numbers[iter.row()] = iter.col();
       }
     }
-    for (const auto cluster_id: cluster_numbers) {
+    for (const auto cluster_id : cluster_numbers) {
       std::cout << cluster_id << std::endl;
     }
   } catch (const std::exception& e) {

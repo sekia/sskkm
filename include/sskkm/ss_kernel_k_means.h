@@ -15,6 +15,7 @@
 #include <boost/property_map/property_map.hpp>
 #include <limits>
 #include <sstream>
+#include <tuple>
 #include <vector>
 
 #include "sskkm/base.h"
@@ -78,9 +79,10 @@ inline ComponentIndicatorMatrix ComputeComponentIndicatorMatrix(
   ComponentIndex max_component_index = 0;
   std::vector<SparseMatrixCoefficient> component_indicator_coeffs;
   component_indicator_coeffs.reserve(components.size());
-  for (const auto& vertex_component_pair: components) {
-    const auto vertex = vertex_component_pair.first;
-    const auto component = vertex_component_pair.second;
+  for (const auto& vertex_component_pair : components) {
+      ComponentIndices::key_type vertex;
+      ComponentIndices::mapped_type component;
+      std::tie(vertex, component) = vertex_component_pair;
     if (max_component_index < component) { max_component_index = component; }
     component_indicator_coeffs.push_back(
         SparseMatrixCoefficient(vertex, component, 1.0));
@@ -133,9 +135,9 @@ inline CannotLinks ComputeTransitiveCannotLinks(
       cannot_link_component_pairs.begin(), cannot_link_component_pairs.end());
 
   UndirectedGraph cannot_links(boost::num_vertices(given_cannot_links));
-  for (const auto& cannot_link_component_pair: cannot_link_component_pairs) {
-    const auto component1 = cannot_link_component_pair.first;
-    const auto component2 = cannot_link_component_pair.second;
+  for (const auto& cannot_link_component_pair : cannot_link_component_pairs) {
+    ComponentIndex component1, component2;
+    std::tie(component1, component2) = cannot_link_component_pair;
     for (ComponentIndicatorMatrix::InnerIterator iter1(components, component1);
          iter1;
          ++iter1) {
@@ -373,7 +375,7 @@ inline ClusterIndicatorMatrix InitializeFarthestFirst(
          ++i) {
       if (is_chosen_component[i]) { continue; }
       double similarity = 0.0;
-      for (const auto j: chosen_component_indices) {
+      for (const auto j : chosen_component_indices) {
         similarity += component_component_similarities(i, j);
       }
       if (similarity < worst_similarity) {
