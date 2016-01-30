@@ -1,4 +1,3 @@
-#include <boost/foreach.hpp>
 /*
   This header is not used directly in this source file but
   |sskkm/ss_kernel_k_means.h|, a header included below, does. And it seems that
@@ -30,19 +29,19 @@ namespace {
 
 void ExitWithHelpMessage(
     int status,
-    const boost::program_options::options_description &options_description) {
+    const boost::program_options::options_description& options_description) {
   (status == 0 ? std::cout : std::cerr) << options_description << std::endl;
   std::exit(status);
 }
 
 ClusteringObjective DetermineObjectiveFunction(
-    const std::string &objective_name) {
+    const std::string& objective_name) {
   if (objective_name == "ratio_cut") {
-    return kRatioCut;
+    return ClusteringObjective::RatioCut;
   } else if (objective_name == "ratio_association") {
-    return kRatioAssociation;
+    return ClusteringObjective::RatioAssociation;
   } else if (objective_name == "normalized_cut") {
-    return kNormalizedCut;
+    return ClusteringObjective::NormalizedCut;
   } else {
     throw std::invalid_argument(
         "Not supported objective function: " + objective_name);
@@ -104,7 +103,7 @@ int main(int argc, const char **argv) {
         opts::parse_command_line(argc, argv, options_description),
         clustering_options);
     opts::notify(clustering_options);
-  } catch (const std::exception &e) {
+  } catch (const std::exception& e) {
     std::cerr << e.what() << std::endl;
     ExitWithHelpMessage(-1, options_description);
   }
@@ -142,7 +141,7 @@ int main(int argc, const char **argv) {
     } else {
       cannot_links = CannotLinks(boost::num_vertices(graph));
     }
-  } catch (const std::exception &e) {
+  } catch (const std::exception& e) {
     std::cerr << e.what() << std::endl;
     return -1;
   }
@@ -159,11 +158,10 @@ int main(int argc, const char **argv) {
         cluster_numbers[iter.row()] = iter.col();
       }
     }
-    BOOST_FOREACH (
-        const ClusterIndicatorMatrix::Index cluster_id, cluster_numbers) {
+    for (const auto cluster_id : cluster_numbers) {
       std::cout << cluster_id << std::endl;
     }
-  } catch (const std::exception &e) {
+  } catch (const std::exception& e) {
     std::cerr << e.what() << std::endl;
     return -1;
   }

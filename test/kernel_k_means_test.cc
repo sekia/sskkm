@@ -1,6 +1,3 @@
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_int_distribution.hpp>
-#include <boost/random/uniform_real_distribution.hpp>
 #include <vector>
 
 #include "gtest/gtest.h"
@@ -22,8 +19,8 @@ class Counter {
   void Reset() { current_count_ = 0; }
 
  private:
-  Counter(const Counter &);
-  Counter &operator=(const Counter &);
+  Counter(const Counter&);
+  Counter& operator=(const Counter&);
   int count_;
   int current_count_;
 };
@@ -58,9 +55,7 @@ TEST(KernelKMeansTest, WeightedKkmIsSameAsKkmWhenWeightsAreOnes) {
 }
 
 TEST(KernelKMeansTest, TwoImplementationsOfWeightedKkmMakeIdenticalResults) {
-  boost::random::mt19937 rng;
   for (int i = 10; i < 20; ++i) {
-    boost::random::uniform_int_distribution<> cluster_selector(0, i - 1);
     DenseMatrix vectors = DenseMatrix::Random(3, 500);
     KernelMatrix kernels = ComputePolynomialKernelMatrix(vectors, 0, 2);
     WeightVector weights = WeightVector::Random(vectors.cols());

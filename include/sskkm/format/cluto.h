@@ -13,7 +13,7 @@ namespace sskkm {
 
 namespace cluto {
 
-enum MatrixType { kInvalidMatrix, kDenseMatrix, kSparseMatrix };
+enum class MatrixType { InvalidMatrix, DenseMatrix, SparseMatrix };
 
 namespace internal {
 
@@ -22,8 +22,8 @@ namespace internal {
    forward to right next at the end of the header.
 */
 inline void ReadMatrixHeader(
-    boost::tokenizer<>::iterator &iter,
-    const boost::tokenizer<>::iterator &iter_end,
+    boost::tokenizer<>::iterator& iter,
+    const boost::tokenizer<>::iterator& iter_end,
     unsigned *num_rows,
     unsigned *num_cols,
     unsigned *num_nonzeros = 0) {
@@ -46,14 +46,14 @@ inline void ReadMatrixHeader(
       throw InvalidFormat("Header includes not expected properties");
     }
     ++iter;
-  } catch (const boost::bad_lexical_cast &e) {
+  } catch (const boost::bad_lexical_cast& e) {
     throw InvalidFormat("Not looks like a integer");
   }
 }
 
 inline DenseMatrix ReadDenseMatrix(
-    boost::tokenizer<>::iterator &iter,
-    const boost::tokenizer<>::iterator &iter_end,
+    boost::tokenizer<>::iterator& iter,
+    const boost::tokenizer<>::iterator& iter_end,
     unsigned num_rows,
     unsigned num_cols,
     bool transposed) {
@@ -71,7 +71,7 @@ inline DenseMatrix ReadDenseMatrix(
         } else {
           matrix(i, j) = boost::lexical_cast<double>(*iter);
         }
-      } catch (const boost::bad_lexical_cast &e) {
+      } catch (const boost::bad_lexical_cast& e) {
         throw InvalidFormat(
             "Coefficient does not look a like real number");
       }
@@ -91,8 +91,8 @@ inline DenseMatrix ReadDenseMatrix(
 }
 
 inline SparseMatrix ReadSparseMatrix(
-    boost::tokenizer<>::iterator &iter,
-    const boost::tokenizer<>::iterator &iter_end,
+    boost::tokenizer<>::iterator& iter,
+    const boost::tokenizer<>::iterator& iter_end,
     unsigned num_rows,
     unsigned num_cols,
     unsigned num_nonzeros,
@@ -117,7 +117,7 @@ inline SparseMatrix ReadSparseMatrix(
         ++iter;
         value = boost::lexical_cast<double>(*iter);
         ++iter;
-      } catch (const boost::bad_lexical_cast &e) {
+      } catch (const boost::bad_lexical_cast& e) {
         throw InvalidFormat(
             transposed ?
             "Row index or coefficient value do not look like a number" :
@@ -161,7 +161,7 @@ inline SparseMatrix ReadSparseMatrix(
 
 }  // namespace internal
 
-inline MatrixType DetermineMatrixType(const std::string &src) {
+inline MatrixType DetermineMatrixType(const std::string& src) {
   boost::tokenizer<> tokenizer(src, ::sskkm::internal::separator_);
   unsigned num_header_elements = 0;
   for (boost::tokenizer<>::iterator iter = tokenizer.begin();
@@ -169,24 +169,24 @@ inline MatrixType DetermineMatrixType(const std::string &src) {
        ++iter) {
     try {
       boost::lexical_cast<unsigned>(*iter);
-    } catch (const boost::bad_lexical_cast &e) {
-      return kInvalidMatrix;
+    } catch (const boost::bad_lexical_cast& e) {
+      return MatrixType::InvalidMatrix;
     }
     ++num_header_elements;
   }
 
   switch (num_header_elements) {
     case 2:
-      return kDenseMatrix;
+      return MatrixType::DenseMatrix;
     case 3:
-      return kSparseMatrix;
+      return MatrixType::SparseMatrix;
     default:
-      return kInvalidMatrix;
+      return MatrixType::InvalidMatrix;
   }
 }
 
-inline DenseMatrix ParseDenseMatrix(const std::string &src, bool transposed = false) {
-  if (DetermineMatrixType(src) != kDenseMatrix) {
+inline DenseMatrix ParseDenseMatrix(const std::string& src, bool transposed = false) {
+  if (DetermineMatrixType(src) != MatrixType::DenseMatrix) {
     throw InvalidFormat("Invalid dense matrix foramt");
   }
 
@@ -201,7 +201,7 @@ inline DenseMatrix ParseDenseMatrix(const std::string &src, bool transposed = fa
 }
 
 inline SparseMatrix ParseSparseMatrix(const std::string &src, bool transposed = false) {
-  if (DetermineMatrixType(src) != kSparseMatrix) {
+  if (DetermineMatrixType(src) != MatrixType::SparseMatrix) {
     throw InvalidFormat("Invalid sparse matrix foramt");
   }
 

@@ -1,15 +1,14 @@
 #ifndef TEST_TEST_UTIL_H_
 #define TEST_TEST_UTIL_H_
 
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_int_distribution.hpp>
+#include <random>
 #include <vector>
 #include <Eigen/Sparse>
 
 namespace sskkm {
 
 inline bool operator==(
-    const SparseMatrix &matrix1, const SparseMatrix &matrix2) {
+    const SparseMatrix& matrix1, const SparseMatrix& matrix2) {
   if (matrix1.rows() != matrix2.rows() || matrix1.cols() != matrix2.cols()) {
     return false;
   }
@@ -27,8 +26,8 @@ inline bool operator==(
 
 inline ClusterIndicatorMatrix InitializeRandomClusters(
     unsigned num_vectors, unsigned num_clusters) {
-  static boost::random::mt19937 rng;
-  boost::random::uniform_int_distribution<> dist(0, num_clusters - 1);
+  static std::mt19937 rng;
+  std::uniform_int_distribution<> dist(0, num_clusters - 1);
   std::vector<SparseMatrixCoefficient> cluster_indicators;
   cluster_indicators.reserve(num_vectors);
   while (true) {

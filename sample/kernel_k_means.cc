@@ -1,14 +1,12 @@
-#include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/parsers.hpp>
 #include <boost/program_options/value_semantic.hpp>
 #include <boost/program_options/variables_map.hpp>
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_int_distribution.hpp>
 #include <cstdlib>
 #include <exception>
 #include <iostream>
+#include <random>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -26,7 +24,7 @@ namespace {
 
 template <typename Matrix>
 KernelMatrix ComputeKernelMatrix(
-    const Matrix &vectors, const std::vector<std::string> &kernel_parameters) {
+    const Matrix& vectors, const std::vector<std::string>& kernel_parameters) {
   if (kernel_parameters.size() == 0) {
     throw std::invalid_argument("No kernel parameters are given.");
   }
@@ -63,18 +61,18 @@ KernelMatrix ComputeKernelMatrix(
 
 void ExitWithHelpMessage(
     int status,
-    const boost::program_options::options_description &options_description) {
+    const boost::program_options::options_description& options_description) {
   (status == 0 ? std::cout : std::cerr) << options_description << std::endl;
   std::exit(status);
 }
 
-boost::random::mt19937 rng_;
+std::mt19937 rng_;
 
 // TODO(sekia): Move to library.
 ClusterIndicatorMatrix InitializeRandomClusters(
     ClusterIndicatorMatrix::Index num_vectors,
     ClusterIndicatorMatrix::Index num_clusters) {
-  boost::random::uniform_int_distribution<> dist(0, num_clusters - 1);
+  std::uniform_int_distribution<> dist(0, num_clusters - 1);
 
   std::vector<SparseMatrixCoefficient> coeffs(num_vectors);
   std::vector<int> cluster_sizes(num_clusters);
@@ -84,7 +82,7 @@ ClusterIndicatorMatrix InitializeRandomClusters(
       coeffs[i] = SparseMatrixCoefficient(i, cluster_index, 1.0);
       ++cluster_sizes[cluster_index];
     }
-    BOOST_FOREACH (const int cluster_size, cluster_sizes) {
+    for (const auto cluster_size : cluster_sizes) {
       if (cluster_size == 0) { goto CONTINUE_OUTER_LOOP; }
     }
     break;
@@ -99,7 +97,7 @@ ClusterIndicatorMatrix InitializeRandomClusters(
 }
 
 std::vector<std::string> SplitString(
-    const std::string &original_string, const std::string &separator) {
+    const std::string& original_string, const std::string& separator) {
   std::vector<std::string> separated_strings;
   std::size_t offset = 0;
   for (std::size_t found_position = original_string.find(separator, offset);
@@ -160,7 +158,7 @@ int main(int argc, const char **argv) {
         opts::parse_command_line(argc, argv, options_description),
         clustering_options);
     opts::notify(clustering_options);
-  } catch (const std::exception &e) {
+  } catch (const std::exception& e) {
     std::cerr << e.what() << std::endl;
     ExitWithHelpMessage(-1, options_description);
   }
@@ -178,7 +176,7 @@ int main(int argc, const char **argv) {
   ClusterIndicatorMatrix clusters;
   try {
     switch (DetermineMatrixType(cluto_matrix)) {
-      case kDenseMatrix: {
+      case MatrixType::DenseMatrix: {
         /*
           Usually, vector data are serialized as *row* vectors. So we need to
           transpose it by setting on |transpose| flag as optional 2nd argument.
@@ -188,7 +186,7 @@ int main(int argc, const char **argv) {
         clusters = InitializeRandomClusters(dense_vectors.cols(), k);
         break;
       }
-      case kSparseMatrix: {
+      case MatrixType::SparseMatrix: {
         // Ditto.
         SparseMatrix sparse_vectors = ParseSparseMatrix(cluto_matrix, true);
         kernels = ComputeKernelMatrix(sparse_vectors, kernel_parameters);
@@ -199,7 +197,7 @@ int main(int argc, const char **argv) {
         throw std::invalid_argument("Input matrix is invalid.");
       }
     }
-  } catch (const std::exception &e) {
+  } catch (const std::exception& e) {
     std::cerr << e.what() << std::endl;
     ExitWithHelpMessage(-1, options_description);
   }
@@ -212,7 +210,7 @@ int main(int argc, const char **argv) {
   ConvergencePredicator converged(500, 20, 0.001);
   try {
     clusters = ExecuteKernelKMeans(clusters, k_min, kernels, converged);
-  } catch (const TooFewClustersLeft &) {
+  } catch (const TooFewClustersLeft&) {
     std::cerr << "Number of clusters became less than wanted." << std::endl;
     return 1;
   }
@@ -228,8 +226,7 @@ int main(int argc, const char **argv) {
       cluster_numbers[iter.row()] = iter.col();
     }
   }
-  BOOST_FOREACH (
-      const ClusterIndicatorMatrix::Index cluster_id, cluster_numbers) {
+  for (const auto cluster_id : cluster_numbers) {
     std::cout << cluster_id << std::endl;
   }
 
