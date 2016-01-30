@@ -408,7 +408,7 @@ inline ClusterIndicatorMatrix InitializeFarthestFirst(
 }  // namespace internal
 
 template <typename ConvergencePredicator>
-inline ClusterIndicatorMatrix ExecuteSSKernelKMeans(
+ClusterIndicatorMatrix ExecuteSSKernelKMeans(
     int k,
     int k_min,
     ClusteringObjective objective,

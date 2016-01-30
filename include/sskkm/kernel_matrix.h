@@ -22,7 +22,7 @@ inline KernelMatrix ComputePolynomialKernelMatrix(
 }
 
 template <typename Matrix>
-inline KernelMatrix ComputeGaussianKernelMatrix(
+KernelMatrix ComputeGaussianKernelMatrix(
     const Matrix& vectors, double deviation) {
   DenseMatrix products = (vectors.transpose() * vectors).eval();
   KernelMatrix exponents =

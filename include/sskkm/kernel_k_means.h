@@ -183,7 +183,7 @@ class TooFewClustersLeft : public std::runtime_error {
 };
 
 template <typename ConvergencePredicator>
-inline ClusterIndicatorMatrix ExecuteKernelKMeans(
+ClusterIndicatorMatrix ExecuteKernelKMeans(
     const ClusterIndicatorMatrix& initial_clusters,
     int k_min,
     const KernelMatrix& kernels,
@@ -213,7 +213,7 @@ inline ClusterIndicatorMatrix ExecuteKernelKMeans(
 }
 
 template <typename ConvergencePredicator>
-inline ClusterIndicatorMatrix ExecuteWeightedKernelKMeans(
+ClusterIndicatorMatrix ExecuteWeightedKernelKMeans(
     const ClusterIndicatorMatrix& initial_clusters,
     int k_min,
     const KernelMatrix& kernels,
